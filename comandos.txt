@@ -11,5 +11,5 @@ ndjson-split 'd.features' < pb-ortho.json > pb-nd.ndjson
 npm install -g d3-dsv
 dsv2json -r ';' -n < dados/PB/DomicilioRenda_PB.csv > pb-censo.ndjson
 ndjson-map 'd.Cod_setor = d.properties.CD_GEOCODI, d' < pb-nd.ndjson > pb-saida-ortho-sector.ndjson
-ndjson-join 'd.Cod_setor' pb-nd.ndjson pb-censo.ndjson > resultado-join-geom-censo.ndjson
+ndjson-join 'd.Cod_setor' pb-saida-ortho-sector.ndjson pb-censo.ndjson > resultado-join-geom-censo.ndjson
 
