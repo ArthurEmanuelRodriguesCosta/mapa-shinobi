@@ -19,3 +19,7 @@ toposimplify -p 1 -f < pb-tracts-topo.json | topoquantize 1e5 > pb-quantized-top
 npm install -g d3
 npm install -g d3-scale-chromatic
 topo2geo tracts=- < pb-quantized-topo.json | ndjson-map -r d3 'z = d3.scaleSequential(d3.interpolateViridis).domain([0, 113]), d.features.forEach(f => f.properties.fill = z(f.properties.renda)), d' | ndjson-split 'd.features' | geo2svg -n --stroke none -w 1000 -h 600 > pb-tracts-threshold-light.svg
+
+OU PENSANDO MELHOR NAS ESCALAS
+
+topo2geo tracts=- < pb-quantized-topo.json | ndjson-map -r d3 -r d3=d3-scale-chromatic 'z = d3.scaleThreshold().domain([1, 21, 33, 53, 113]).range(d3.schemeOrRd[5]), d.features.forEach(f => f.properties.fill = z(f.properties.renda)), d' | ndjson-split 'd.features' | geo2svg -n --stroke none -w 1000 -h 600 > pb-tracts-threshold-light.svg
