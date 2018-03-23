@@ -5,7 +5,6 @@
 # OBTER E TRANSFORMAR OS DADOS ======================
 # Baixa e descompacta
 # curl 'ftp://geoftp.ibge.gov.br/organizacao_do_territorio/malhas_territoriais/malhas_municipais/municipio_2016/UFs/PB/pb_municipios.zip' -o pb_municipios.zip
-unzip pb_municipios.zip
 
 # Cria geometria projetada
 #shp2json 25MUE250GC_SIR.shp --encoding 'utf8' \
@@ -24,11 +23,11 @@ dsv2json \
 # organiza geometria
 ndjson-split 'd.features' \
   < geo1-br_municipios_projetado.json \
-  | ndjson-map 'd.cidade = d.properties.NOME.toUpperCase(), d' \
+  | ndjson-map 'd.codigo = d.properties.GEOCODIGO, d' \
   > geo2-pb_municipios.ndjson
 
 # organiza variável
-ndjson-map 'd.cidade = d.Localidade.toUpperCase(), d' \
+ndjson-map 'd.codigo = d.codigoIBGE, d' \
   < dado1-aprendizado.ndjson \
   > dado2-aprendizado-na-pb-comchave.ndjson
 
@@ -37,8 +36,8 @@ ndjson-map 'd.cidade = d.Localidade.toUpperCase(), d' \
 # 2. o resultado do join é um array com 2 objetos por linha
 # 3. o ndjson-map volta a um objeto por linha
 EXP_PROPRIEDADE='d[0].properties = Object.assign({}, d[0].properties, d[1]), d[0]'
-ndjson-join --left 'd.cidade' \
-  geo2-pb_municipios.ndjson \
+ndjson-join 'd.codigo' \
+  geo2-br_municipios.ndjson \
   dado2-aprendizado-na-pb-comchave.ndjson \
   | ndjson-map \
     "$EXP_PROPRIEDADE" \

@@ -28,7 +28,7 @@ var path = d3.geoPath();
 var color = d3.scaleThreshold().domain([-15, 0, 15, 30, 45]).range(d3.schemeSpectral[5]);
 
 // função aux definida em legenda-d3-cor.js
-desenhaLegenda(-30, 60, color, "Crescimento entre 2011 e 2013 (pp*)")
+desenhaLegenda(-30, 60, color, "2007")
 
 d3.queue()
     .defer(d3.json, "geo4-municipios-e-aprendizado-simplificado.json")
@@ -39,16 +39,18 @@ function ready(error, dados) {
 
   var cidades = dados.features;
 
+  console.log(cidades);
+
   svg.append("g")
       .attr("class", "cidades")
     .selectAll("path")
     .data(cidades)
     .enter()
     .append("path")
-      .attr("fill", d => {let valor = d.properties["Crescimento entre 2011 e 2013 (pp*)"]; return valor === "NA" ? '#e0e0eb' : color(valor)})
+      .attr("fill", d => {let valor = d.properties["2007"]; return valor === "NA" ? '#e0e0eb' : color(valor)})
       .attr("d", path)
     .append("title")
-      .text(d => d.properties.Cidade + ": " + d.properties["Crescimento entre 2011 e 2013 (pp*)"] + "%");
+      .text(d => d.properties.Cidade + ": " + d.properties["2007"] + "%");
 }
 
 </script>
